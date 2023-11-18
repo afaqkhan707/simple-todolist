@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import { IconButton, ListItemButton, Tooltip, Typography } from '@mui/material';
 
 const ToDoList = () => {
   const [note, setNote] = useState('');
@@ -21,29 +22,36 @@ const ToDoList = () => {
   return (
     <>
       <Box className='box'>
-        <h2>TodoList</h2>
+        <Typography variant='h4'>Todo List</Typography>
         <TextField
-        size='md'
+          size='sm'
           id='outlined-basic'
-          label='NOTE TEXT'
+          label='Note Text'
           variant='outlined'
           className='text'
           type='text'
           value={note}
-          placeholder='NOTE TEXT'
           onChange={noteText}
         />
-  
-        <Box sx={{display:'flex',justifyContent:'center',}}>
-        <Button variant='contained' className='add-btn' onClick={addNote}>
-          <AddIcon />
-        </Button>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Tooltip title='Add Icon'>
+            <IconButton
+              variant='contained'
+              className='add-btn'
+              onClick={addNote}
+            >
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
         <Box>
-        <ul>
-          {Array.isArray(saveNote) &&
-            saveNote.map((item, index) => <li key={index}> {item}</li>)}
-        </ul>
+          <ul>
+            {Array.isArray(saveNote) &&
+              saveNote.map((item, index) => (
+                <ListItemButton key={index}> {item}</ListItemButton>
+              ))}
+          </ul>
         </Box>
       </Box>
     </>
