@@ -92,14 +92,22 @@ const ToDoList = () => {
             <ol>
               {Array.isArray(saveNote) &&
                 saveNote.map((item, index) => (
-                  <ListItemButton key={index}>
+                  <ListItemButton
+                    key={index}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     {item}
-                    <IconButton onClick={() => editNote(index)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => deleteNote(index)}>
-                      <DeleteIcon />
-                    </IconButton>
+                    <Box>
+                      <IconButton onClick={() => editNote(index)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => deleteNote(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
                   </ListItemButton>
                 ))}
             </ol>
