@@ -4,15 +4,10 @@
   margin: 0;
 }
 
-body {
-  width: 100vw;
-  overflow-x: hidden;
-}
-
 .hero {
   width: 100wh;
   height: 100vh;
-  background-color: #f1f1f1;
+  background-color: #414141;
 }
 .box {
   position: fixed;
@@ -25,15 +20,7 @@ body {
   background-color: lightgreen;
   border-radius: 12px;
 }
-#outlined-basic {
-  height: 0px;
-}
-.box input {
-  padding: 8px 12px;
-  margin-top: 20px;
-  width: 100%;
-  margin-bottom: 20px;
-}
+
 .text {
   width: 100%;
   margin-top: 10px;
