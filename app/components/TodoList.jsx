@@ -1,17 +1,28 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import { IconButton, ListItemButton, Tooltip, Typography } from '@mui/material';
+import {
+  IconButton,
+  ListItemButton,
+  Tooltip,
+  Typography,
+  MenuItem,
+} from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import TodoItem from './TodoItem';
+import theme from './Theme';
 
 const ToDoList = () => {
   const [note, setNote] = useState('');
   const [saveNote, setSaveNote] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  const [isItemClick, setIsItemClick] = useState(false);
+  const [item, setItem] = useState('');
   const noteText = (e) => {
     setNote(e.target.value);
   };
@@ -36,11 +47,19 @@ const ToDoList = () => {
     const newNotes = [...saveNote];
     newNotes.splice(index, 1);
     setSaveNote(newNotes);
+    setSelectedItemIndex(null); // Clear selected item when deleting
   };
 
   const editNote = (index) => {
     setNote(saveNote[index]);
     setEditIndex(index);
+    setSelectedItemIndex(null); // Clear selected item when editing
+  };
+
+  const handleItemClick = (index, item) => {
+    setItem(item);
+    setIsItemClick(true);
+    // setSelectedItemIndex(selectedItemIndex === index ? null : index);
   };
 
   useEffect(() => {
@@ -55,16 +74,30 @@ const ToDoList = () => {
   }, []);
 
   return (
-    <>
-      <Box className='hero'>
-        <Box className='box'>
-          <Typography variant='h4'>Todo List</Typography>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ width: '100vw', height: '100vh', bgcolor: '#6c18a5' }}>
+        <Box
+          sx={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            padding: '20px',
+            width: '300px',
+            bgcolor: 'lightgreen',
+            borderRadius: '12px',
+            overflow: 'hidden',
+          }}
+        >
+          <Typography variant='h4' center>
+            Todo List
+          </Typography>
           <TextField
             size='sm'
             id='outlined-basic'
             label='Note Text'
             variant='outlined'
-            className='text'
+            sx={{ width: '100%', marginTop: '10px' }}
             type='text'
             value={note}
             onChange={noteText}
@@ -80,7 +113,12 @@ const ToDoList = () => {
             <Tooltip title='Add Icon'>
               <IconButton
                 variant='contained'
-                className='add-btn'
+                sx={{
+                  marginTop: ' 16px',
+                  display: ' flex',
+                  justifyContent: ' center',
+                  alignItems: ' center',
+                }}
                 onClick={addNote}
               >
                 <AddIcon />
@@ -88,7 +126,15 @@ const ToDoList = () => {
             </Tooltip>
           </Box>
 
-          <Box>
+          <Box
+            sx={{
+              overflowY: 'auto',
+              bgcolor: 'lightgreen',
+              height: '400px',
+              wdith: '100%',
+              borderRadius: '12px',
+            }}
+          >
             <ol>
               {Array.isArray(saveNote) &&
                 saveNote.map((item, index) => (
@@ -99,14 +145,25 @@ const ToDoList = () => {
                       justifyContent: 'space-between',
                     }}
                   >
-                    {item}
+                    <Typography onClick={() => handleItemClick(index, item)}>
+                      {selectedItemIndex === index
+                        ? item
+                        : item.length > 15
+                        ? `${item.slice(0, 15)}...`
+                        : item}
+                    </Typography>
+
                     <Box>
-                      <IconButton onClick={() => editNote(index)}>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton onClick={() => deleteNote(index)}>
-                        <DeleteIcon />
-                      </IconButton>
+                      <Tooltip title='Edit Icon'>
+                        <IconButton onClick={() => editNote(index)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title='Delete Icon'>
+                        <IconButton onClick={() => deleteNote(index)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                   </ListItemButton>
                 ))}
@@ -114,7 +171,12 @@ const ToDoList = () => {
           </Box>
         </Box>
       </Box>
-    </>
+      {isItemClick ? (
+        <TodoItem text={item} setIsItemClick={setIsItemClick} />
+      ) : (
+        <></>
+      )}
+    </ThemeProvider>
   );
 };
 
